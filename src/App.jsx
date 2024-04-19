@@ -1,39 +1,75 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom"
-import MainLayuot from "./layout/MainLayout"
+import { createBrowserRouter,RouterProvider, Navigate } from 'react-router-dom'
 
-import Home from "./page/Home";
-import Create from "./page/Create";
-import SingleRecipe from "./page/SingleRecipe"
+// Layout
+import MainLayout from "./Layout/MainLayout"
 
+// pgeas
+import Home from "./pages/Home"
+import  Signin from "./pages/Signin"
+import Signup from "./pages/Signup"
+import About from './pages/About'
+import Contact from "./pages/Contact"
 
+// components
+import ProtectedRotes from './components/ProtectedRotes'
 
-function App() {
-  const routes = createBrowserRouter([
+// context
+
+import { useContext, useEffect } from 'react'
+import { GlobalContext } from './context/useGlobalContext'
+
+//firebase
+
+import { auth } from './firebase/firebaseConfig'
+import { onAuthStateChanged } from 'firebase/auth'
+
+function App(){
+  const {user , dispatch, authChange} = useContext(GlobalContext)
+  const routes =createBrowserRouter([
     {
       path:"/",
-      element:<MainLayuot/>,
+       element:(
+       <ProtectedRotes user={user}>
+         <MainLayout/>
+       </ProtectedRotes>),
       children:[
         {
-          index:true,
-          element: <Home/>
+           index:true,
+           element :<Home/>
         },
-      {
-        path:"/create",
-        element:<Create/>
-      },
-      {
-        path:"/singleRecipe/:id",
-        element: <SingleRecipe/>
-      }
+        {
+          path: '/about',
+          element: <About/>
+        },
+        {
+          path:'/contact',
+          element:<Contact/>
+        }
       ]
-    }
-  ])
+    },
+    {
+      path:"/signin",
+      element : user ? <Navigate to="/" /> : <Signin/>,
+    },
+    {
+      path:"/signup",
+      element :user ? <Navigate to="/" /> : <Signup/>,
+    },
+  ]);
 
-  return  (
-    <div className="container">
-      <RouterProvider router={routes}/>
-    </div>
-  )
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+     dispatch({
+      type: "SIGN_IN",
+      payload: user,
+     })
+     dispatch({
+      type: "AUTH_CHANGE",
+     })
+    });
+  } , [])
+  return <>{authChange && <RouterProvider router={routes}/>}</>
 }
 
 export default App
+

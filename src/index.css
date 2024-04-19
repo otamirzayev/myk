@@ -1,24 +1,10 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
-.container{
-  width: 100%;
-  max-width: 1100px;
-  padding-left: 30px;
-  padding-right: 30px;
-  margin-left: auto;
-  margin-right: auto;
+@layer components {
+    .align-element{
+        @apply max-w-[1200px] w-full px-5 mx-auto
+    }
 }
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-

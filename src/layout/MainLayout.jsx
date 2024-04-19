@@ -1,14 +1,18 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { Outlet } from "react-router-dom"
+// components
+import Navbar from "../components/Navbar"
+import ThemeContainer from "../components/ThemeContainer"
 
-
-function MainLayuot() {
+function MainLayout() {
   return (
-   <>
-   <Navbar/>
-   <Outlet/>
-   </>
+    <>
+      <Navbar/>
+      <ThemeContainer/>
+      <main className="align-element">
+        <Outlet/>
+      </main>
+    </>
   )
 }
 
-export default MainLayuot
+export default MainLayout
